@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<title>Hall of Fame — Archive</title>
+<style>
+/* Profile images are set in each card's <img class="avatar" src="...">.
+   Change the src to your own image path or direct image URL. */
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+:root{--bg:#080808;--panel:#101010;--line:#292929;--muted:#858585;--white:#f3f3f0;--soft:#c8c8c4}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--white);font-family:Manrope,Arial,sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(ellipse at 50% 0%,#202020 0%,transparent 48%),linear-gradient(90deg,transparent 49.95%,#ffffff06 50%,transparent 50.05%)}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+.noise{position:fixed;inset:0;pointer-events:none;z-index:5;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+.nav{height:76px;padding:0 6vw;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;position:relative;z-index:10;background:#080808c9;backdrop-filter:blur(14px)}
+.brand{display:flex;align-items:center;gap:12px;font:700 12px 'DM Mono',monospace;letter-spacing:.16em}
+.brand-mark{width:29px;height:29px;border:1px solid #eee;display:grid;place-items:center;font:700 14px 'Space Grotesk';transform:rotate(45deg)}
+.brand-mark span{transform:rotate(-45deg)}
+.nav-right{display:flex;align-items:center;gap:28px;font:10px 'DM Mono',monospace;letter-spacing:.13em;color:#a2a2a2}
+.nav-right a{transition:color .2s}.nav-right a:hover{color:white}
+.status{display:flex;align-items:center;gap:8px;color:#d6d6d6}
+.status i{width:6px;height:6px;background:#e9e9e9;border-radius:50%;box-shadow:0 0 12px #fff;display:inline-block}
+.hero{min-height:570px;padding:95px 8vw 76px;position:relative;display:flex;flex-direction:column;justify-content:center;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero-index{font:10px 'DM Mono',monospace;letter-spacing:.22em;color:#9b9b9b;display:flex;align-items:center;gap:12px;margin-bottom:27px}
+.hero-index:before{content:"";height:1px;width:30px;background:#888}
+h1{font:500 clamp(56px,10.3vw,150px)/.84 'Space Grotesk',sans-serif;letter-spacing:-.085em;margin:0;text-transform:uppercase;max-width:1000px}
+h1 span{display:block;color:transparent;-webkit-text-stroke:1px #eeeeee; margin-left:clamp(24px,8vw,125px)}
+.hero-bottom{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-top:48px}
+.hero-copy{font-size:13px;line-height:1.8;color:#a9a9a9;max-width:350px}
+.hero-copy strong{color:#f5f5f5;font-weight:600}
+.hero-stamp{width:112px;height:112px;border:1px solid #444;border-radius:50%;display:grid;place-items:center;text-align:center;font:9px/1.8 'DM Mono',monospace;letter-spacing:.15em;transform:rotate(-13deg);color:#cfcfcf;flex-shrink:0}
+.hero-stamp b{font:700 25px 'Space Grotesk';display:block;letter-spacing:-.08em}
+.hero-ghost{position:absolute;right:-.03em;top:9%;font:700 clamp(200px,35vw,520px)/1 'Space Grotesk';letter-spacing:-.12em;color:#ffffff04;pointer-events:none;user-select:none}
+.marquee{overflow:hidden;border-bottom:1px solid var(--line);padding:15px 0;color:#aaa;font:10px 'DM Mono',monospace;letter-spacing:.2em;white-space:nowrap}
+.marquee-track{display:flex;width:max-content;will-change:transform;animation:marquee-scroll var(--marquee-duration,28s) linear infinite}
+.marquee-group{display:flex;flex:0 0 auto;align-items:center;padding-right:44px}
+.marquee span{margin:0 22px}.marquee b{color:#eee;font-weight:500}
+/* The script measures one complete group and repeats it enough times to fill
+   the viewport. The animation shifts by exactly one group width, so the loop
+   is seamless and there is never an empty gap on the right. */
+@keyframes marquee-scroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(calc(0px - var(--marquee-distance, 0px)),0,0)}}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.section{padding:80px 8vw}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:32px}
+.eyebrow{font:10px 'DM Mono',monospace;letter-spacing:.2em;color:#969696;text-transform:uppercase;margin-bottom:13px}
+h2{font:500 clamp(34px,5vw,58px)/1 'Space Grotesk';letter-spacing:-.06em;margin:0}
+.section-note{font:10px 'DM Mono',monospace;color:#858585;letter-spacing:.12em;text-align:right}
+.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin:0 0 25px;flex-wrap:wrap}
+.filters{display:flex;gap:7px;flex-wrap:wrap}
+.filter{border:1px solid #303030;background:transparent;color:#a9a9a9;padding:10px 14px;font:10px 'DM Mono',monospace;letter-spacing:.1em;cursor:pointer;transition:.2s}
+.filter:hover,.filter.active{background:#f0f0ed;color:#0a0a0a;border-color:#f0f0ed}
+.search{width:min(100%,230px);border:1px solid #303030;background:#0d0d0d;color:white;padding:11px 13px;outline:none;font:11px 'DM Mono',monospace}
+.search:focus{border-color:#aaa}.search::placeholder{color:#696969}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.card{position:relative;min-height:280px;border:1px solid #292929;background:linear-gradient(145deg,#151515,#0b0b0b 70%);padding:23px;overflow:hidden;transition:transform .25s,border-color .25s;isolation:isolate}
+.card:hover{transform:translateY(-5px);border-color:#777}
+.card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 15%,#ffffff12,transparent 34%);z-index:-1}
+.card-top{display:flex;justify-content:space-between;align-items:center;font:9px 'DM Mono',monospace;color:#858585;letter-spacing:.14em}
+.rank{border:1px solid #454545;padding:6px 8px;color:#d8d8d8}
+.avatar-wrap{width:76px;height:76px;margin:30px 0 19px;position:relative}
+.avatar{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(1);background:#1a1a1a;border:1px solid #3c3c3c}
+.avatar-placeholder{width:100%;height:100%;display:grid;place-items:center;background:linear-gradient(135deg,#292929,#090909);border:1px solid #444;font:700 25px 'Space Grotesk';letter-spacing:-.08em;color:#eee}
+.card h3{font:600 21px 'Space Grotesk';letter-spacing:-.04em;margin:0 0 6px}
+.role{font:10px 'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#a0a0a0}
+.card-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:14px;border-top:1px solid #252525;font:9px 'DM Mono',monospace;letter-spacing:.1em;color:#777}
+.card-bottom span:last-child{color:#cfcfcf}
+.empty{display:none;grid-column:1/-1;padding:40px;text-align:center;color:#8d8d8d;border:1px dashed #333;font:11px 'DM Mono',monospace}
+.featured{display:grid;grid-template-columns:1.1fr 1fr;border:1px solid #343434;min-height:280px}
+.featured-visual{position:relative;overflow:hidden;min-height:280px;background:radial-gradient(circle at 50% 40%,#393939,#111 55%,#090909);display:grid;place-items:center}
+.featured-visual:before,.featured-visual:after{content:"";position:absolute;border:1px solid #ffffff24;border-radius:50%;width:230px;height:230px}
+.featured-visual:after{width:310px;height:310px}
+.featured-symbol{font:700 clamp(100px,18vw,190px)/1 'Space Grotesk';letter-spacing:-.15em;color:#f0f0f0;z-index:1;text-shadow:0 0 55px #fff2}
+.featured-tag{position:absolute;top:20px;left:20px;font:9px 'DM Mono',monospace;letter-spacing:.18em;color:#aaa}
+.featured-info{padding:clamp(25px,4vw,48px);display:flex;flex-direction:column;justify-content:center}
+.featured-info h3{font:500 clamp(29px,4vw,48px)/1 'Space Grotesk';letter-spacing:-.07em;margin:0 0 12px}
+.featured-info p{font-size:12px;line-height:1.9;color:#9b9b9b;max-width:360px}
+.meta{display:flex;gap:22px;margin-top:22px;font:9px 'DM Mono',monospace;letter-spacing:.12em;color:#b8b8b8}
+.quote{padding:85px 8vw;text-align:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:linear-gradient(180deg,#0b0b0b,#101010,#0b0b0b)}
+.quote-mark{font:80px Georgia;color:#777;line-height:.7}
+.quote p{font:500 clamp(22px,4.5vw,46px)/1.25 'Space Grotesk';letter-spacing:-.05em;max-width:850px;margin:25px auto}
+.quote small{font:9px 'DM Mono',monospace;letter-spacing:.2em;color:#8d8d8d}
+.footer{padding:35px 8vw;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;color:#777;font:9px 'DM Mono',monospace;letter-spacing:.13em}
+.footer strong{color:#eee;font-weight:500}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}.reveal.visible{opacity:1;transform:translateY(0)}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{min-height:520px;padding-left:7vw;padding-right:7vw}.section{padding:65px 7vw}.featured{grid-template-columns:1fr}.featured-visual{min-height:230px}.nav{padding:0 5vw}.nav-right{gap:14px}}
+@media(max-width:560px){.nav{height:64px}.nav-right a{display:none}.hero{min-height:500px;padding-top:75px;padding-bottom:60px}.hero-bottom{margin-top:36px}.hero-stamp{width:82px;height:82px;font-size:7px}.hero-stamp b{font-size:20px}.grid{grid-template-columns:1fr}.card{min-height:255px}.avatar-wrap{margin-top:22px}.section-head{align-items:start;flex-direction:column}.section-note{text-align:left}.section{padding:55px 6vw}.featured-info{padding:28px}.quote{padding:65px 7vw}.footer{padding:28px 6vw}.search{width:100%}.toolbar{align-items:stretch}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+
+/* HOF intro + background music controls */
+#hof-intro{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:#080808;opacity:1;visibility:visible;transition:opacity .9s ease,visibility .9s ease}
+#hof-intro.is-fading{opacity:0;visibility:hidden;pointer-events:none}
+.hof-intro-inner{display:flex;flex-direction:column;align-items:center;gap:25px;text-align:center;padding:24px}
+.hof-intro-image{width:clamp(105px,18vw,160px);aspect-ratio:1;border-radius:50%;object-fit:cover;border:1px solid #555;box-shadow:0 0 45px #ffffff14;animation:hof-spin 2.8s linear infinite}
+.hof-intro-label{font:10px 'DM Mono',monospace;letter-spacing:.25em;color:#bdbdbd}
+.hof-intro-line{width:140px;height:1px;background:#303030;overflow:hidden}
+.hof-intro-line:after{content:"";display:block;width:35%;height:100%;background:#eee;animation:hof-load 1.4s ease-in-out infinite}
+@keyframes hof-spin{to{transform:rotate(360deg)}}
+@keyframes hof-load{0%{transform:translateX(-110%)}100%{transform:translateX(400%)}}
+@media(prefers-reduced-motion:reduce){.hof-intro-image{animation:none}}
+
+
+/* Additional mobile/tablet usability improvements */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { min-width: 320px; }
+img { max-width: 100%; }
+button, input { touch-action: manipulation; }
+.nav, .hero, .section, .quote, .footer { min-width: 0; }
+.nav-right { min-width: 0; }
+.brand { min-width: 0; }
+.brand > span:last-child { overflow-wrap: anywhere; }
+.grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.card, .featured-info, .featured-visual { min-width: 0; }
+.search { min-height: 42px; border-radius: 0; }
+.filter { min-height: 40px; }
+.card h3, .role, .card-bottom { overflow-wrap: anywhere; }
+
+@media (max-width: 850px) {
+  .nav { gap: 16px; }
+  .brand { gap: 9px; letter-spacing: .1em; }
+  .nav-right { gap: 12px; font-size: 9px; }
+  .hero { padding-top: 76px; padding-bottom: 60px; }
+  .hero-ghost { right: 0; top: 14%; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .card { padding: 20px; }
+  .card-bottom { gap: 12px; flex-wrap: wrap; }
+}
+
+@media (max-width: 560px) {
+  .nav {
+    height: auto;
+    min-height: 64px;
+    padding: 14px 5vw;
+    align-items: flex-start;
+  }
+  .brand { font-size: 10px; line-height: 1.5; }
+  .brand-mark { width: 25px; height: 25px; flex: 0 0 25px; }
+  .nav-right { padding-top: 5px; font-size: 8px; letter-spacing: .06em; }
+  .status { gap: 5px; white-space: nowrap; }
+  .hero {
+    min-height: 0;
+    padding: 72px 6vw 48px;
+  }
+  .hero-index { font-size: 9px; letter-spacing: .13em; gap: 8px; }
+  h1 { font-size: clamp(48px, 15vw, 76px); line-height: .9; overflow-wrap: anywhere; }
+  h1 span { margin-left: 7vw; -webkit-text-stroke-width: .8px; }
+  .hero-bottom { align-items: flex-start; gap: 18px; margin-top: 30px; }
+  .hero-copy { font-size: 12px; line-height: 1.75; }
+  .hero-stamp { width: 70px; height: 70px; flex: 0 0 70px; font-size: 6px; }
+  .hero-stamp b { font-size: 17px; }
+  .hero-ghost { top: 10%; right: -5%; font-size: 55vw; }
+  .marquee { padding: 12px 0; font-size: 9px; }
+  .section { padding: 48px 6vw; }
+  .section-head { gap: 14px; margin-bottom: 24px; }
+  h2 { font-size: clamp(30px, 9vw, 42px); line-height: 1.05; }
+  .section-note { font-size: 9px; line-height: 1.7; }
+  .toolbar { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+  .filters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+  .filter { padding: 11px 8px; font-size: 9px; letter-spacing: .06em; }
+  .search { width: 100%; min-height: 44px; font-size: 12px; }
+  .grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .card { min-height: 0; padding: 20px; }
+  .avatar-wrap { width: 68px; height: 68px; margin: 22px 0 16px; }
+  .card h3 { font-size: 21px; }
+  .card-bottom { margin-top: 18px; }
+  .featured { grid-template-columns: minmax(0, 1fr); }
+  .featured-visual { min-height: 190px; }
+  .featured-visual:before { width: 170px; height: 170px; }
+  .featured-visual:after { width: 230px; height: 230px; }
+  .featured-symbol { font-size: 125px; }
+  .featured-info { padding: 25px 21px; }
+  .featured-info h3 { font-size: 34px; }
+  .featured-info p { font-size: 12px; }
+  .meta { gap: 14px; flex-wrap: wrap; }
+  .quote { padding: 52px 7vw; }
+  .quote-mark { font-size: 64px; }
+  .quote p { font-size: clamp(23px, 7vw, 32px); }
+  .quote small { font-size: 8px; line-height: 1.8; }
+  .footer { padding: 24px 6vw; align-items: flex-start; flex-direction: column; gap: 12px; line-height: 1.8; }
+  .empty { padding: 28px 15px; line-height: 1.7; }
+}
+
+@media (max-width: 360px) {
+  .nav { flex-direction: column; gap: 8px; }
+  .nav-right { width: 100%; }
+  .hero-bottom { flex-direction: column; }
+  .hero-stamp { align-self: flex-end; }
+  .filter { font-size: 8px; }
+}
+
+@media (hover: none) {
+  .card:hover { transform: none; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- INTRO: change the image src below to your preferred intro image -->
+<div id="hof-intro" aria-label="Hall of Fame intro">
+  <div class="hof-intro-inner">
+    <img class="hof-intro-image" id="hof-intro-image" src="https://file.garden/arIVMF8UTouAgBFb/9fbdd1fc3e7a8ad21ead28b0626f4cce.jpg" alt="Hall of Fame intro image">
+    <div class="hof-intro-label" id="hof-intro-label">ENTERING THE ARCHIVE</div>
+    <div class="hof-intro-line" aria-hidden="true"></div>
+  </div>
+</div>
+
+<div class="noise"></div>
+<nav class="nav">
+  <a class="brand" href="#top" aria-label="Hall of Fame home"><span class="brand-mark"><span>H</span></span><span>THE ARCHIVE / HOF</span></a>
+  <div class="nav-right"><span class="status"><i></i> EST. 2026</span><a href="#inductees">INDUCTEES</a><a href="#legacy">LEGACY</a></div>
+</nav>
+<header class="hero" id="top">
+  <div class="hero-ghost">H</div>
+  <div class="hero-index">001 — THE IMMORTAL ARCHIVE</div>
+  <h1>Hall of<span>Fame.</span></h1>
+  <div class="hero-bottom">
+    <div class="hero-copy">A collection of <strong>the names that made history in Call of Duty Mobile.</strong><br>Recognizing the talent, loyalty, and legacy that stand above the rest.</div>
+    <div class="hero-stamp"><div><b>HOF</b>HONOR THE<br>LEGACY · MMXXVI</div></div>
+  </div>
+</header>
+<div class="marquee" aria-hidden="true"><div class="marquee-track"><div class="marquee-group"><span>NO ORDINARY NAMES</span>✳<span><b>ONLY LEGACY</b></span>✳<span>RESPECT IS EARNED</span>✳<span>THE ARCHIVE</span>✳</div><div class="marquee-group"><span>NO ORDINARY NAMES</span>✳<span><b>ONLY LEGACY</b></span>✳<span>RESPECT IS EARNED</span>✳<span>THE ARCHIVE</span>✳</div></div></div>
+<main>
+<section class="section" id="inductees">
+  <div class="section-head reveal">
+    <div><div class="eyebrow">01 / The inductees</div><h2>Names that matter.</h2></div>
+    <div class="section-note">A SELECT FEW.<br>REMEMBERED FOREVER.</div>
+  </div>
+  <div class="toolbar reveal">
+    <div class="filters" aria-label="Filter inductees">
+      <button class="filter active" data-filter="all">ALL MEMBERS</button>
+      <button class="filter" data-filter="founder">FOUNDERS</button>
+      <button class="filter" data-filter="legend">LEGENDS</button>
+      <button class="filter" data-filter="elite">ELITE</button>
+    </div>
+    <input class="search" id="search" type="search" placeholder="SEARCH THE ARCHIVE..." aria-label="Search inductees">
+  </div>
+  <div class="grid" id="memberGrid">
+    <!-- EDIT MEMBERS: change name, role, category, year, and each image src below.
+         Put your image files in an "images" folder beside this HTML file,
+         or replace the src with a direct image URL. Example: src="images/member-1.jpg" -->
+    <article class="card reveal" data-category="founder" data-name="yue">
+      <div class="card-top"><span>INDUCTEE NO. 001</span><span class="rank">FOUNDING</span></div>
+      <div class="avatar-wrap"><img class="avatar" src="https://file.garden/arIVMF8UTouAgBFb/852188585_1561602549058844_3909519626245279476_n.jpg" alt="Yue profile picture" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="avatar-placeholder" style="display:none">M1</div></div>
+      <h3>Yue</h3><div class="role">Founder / Visionary</div>
+      <div class="card-bottom"><span>ORIGINAL MEMBER</span><span>2025 ↗</span></div>
+    </article>
+    <article class="card reveal" data-category="founder" data-name="santi">
+      <div class="card-top"><span>INDUCTEE NO. 002</span><span class="rank">FOUNDING</span></div>
+      <div class="avatar-wrap"><img class="avatar" src="https://file.garden/arIVMF8UTouAgBFb/851128750_1135703838988500_1353662175567921060_n.jpg" alt="Santi profile picture" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="avatar-placeholder" style="display:none">M2</div></div>
+      <h3>Santi</h3><div class="role">Developer / Original</div>
+      <div class="card-bottom"><span>ORIGINAL MEMBER</span><span>2025 ↗</span></div>
+    </article>
+    <article class="card reveal" data-category="founder" data-name="kairu">
+      <div class="card-top"><span>INDUCTEE NO. 003</span><span class="rank">FOUNDING</span></div>
+      <div class="avatar-wrap"><img class="avatar" src="https://file.garden/arIVMF8UTouAgBFb/848350206_1611886130621098_8155066177593108340_n.jpg" alt="Kairu profile picture" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="avatar-placeholder" style="display:none">M3</div></div>
+      <h3>Kairu</h3><div class="role">Leader / Trusted</div>
+      <div class="card-bottom"><span>ORIGINAL MEMBER</span><span>2025 ↗</span></div>
+    </article>
+    <article class="card reveal" data-category="legend" data-name="roa">
+      <div class="card-top"><span>INDUCTEE NO. 004</span><span class="rank">LEGEND</span></div>
+      <div class="avatar-wrap"><img class="avatar" src="https://file.garden/arIVMF8UTouAgBFb/848390236_1470781134955017_4067361169608293496_n.jpg" alt="Roa profile picture" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="avatar-placeholder" style="display:none">M4</div></div>
+      <h3>Roa</h3><div class="role">The One Who Delivered</div>
+      <div class="card-bottom"><span>ORIGINAL MEMBER</span><span>2025 ↗</span></div>
+    </article>
+    <article class="card reveal" data-category="legend" data-name="kei">
+      <div class="card-top"><span>INDUCTEE NO. 005</span><span class="rank">LEGEND</span></div>
+      <div class="avatar-wrap"><img class="avatar" src="https://file.garden/arIVMF8UTouAgBFb/popong.png" alt="Kei Three profile picture" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="avatar-placeholder" style="display:none">M5</div></div>
+      <h3>Kei</h3><div class="role">Legend / Specialist</div>
+      <div class="card-bottom"><span>ORIGINAL MEMBER</span><span>2025 ↗</span></div>
+    </article>
+    <article class="card reveal" data-category="legend" data-name="tori">
+      <div class="card-top"><span>INDUCTEE NO. 006</span><span class="rank">LEGEND</span></div>
+      <div class="avatar-wrap"><img class="avatar" src="https://file.garden/arIVMF8UTouAgBFb/e90e4ba8-4b51-4867-9d31-11de3cf4b59f.jfif" alt="Tori profile picture" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="avatar-placeholder" style="display:none">M6</div></div>
+      <h3>Tori</h3><div class="role">Editor / Professional</div>
+      <div class="card-bottom"><span>ORIGINAL MEMBER</span><span>2025 ↗</span></div>
+    </article>
+    <article class="card reveal" data-category="legend" data-name="yuz">
+      <div class="card-top"><span>INDUCTEE NO. 007</span><span class="rank">LEGEND</span></div>
+      <div class="avatar-wrap"><img class="avatar" src="https://file.garden/arIVMF8UTouAgBFb/852600369_1422468292714609_2785003611347063986_n.jpg" alt="Yuz profile picture" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="avatar-placeholder" style="display:none">M7</div></div>
+      <h3>Yuz</h3><div class="role">Friendly / Known</div>
+      <div class="card-bottom"><span>ORIGINAL MEMBER</span><span>2025 ↗</span></div>
+    </article>
+    <article class="card reveal" data-category="elite" data-name="mawi">
+      <div class="card-top"><span>INDUCTEE NO. 008</span><span class="rank">ELITE</span></div>
+      <div class="avatar-wrap"><img class="avatar" src="https://file.garden/arIVMF8UTouAgBFb/20c665b7-39a9-479b-8487-188be527f362.jfif" alt="Mawi profile picture" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="avatar-placeholder" style="display:none">M8</div></div>
+      <h3>Mawi</h3><div class="role">Creative / Innovator</div>
+      <div class="card-bottom"><span>HALL OF FAME</span><span>2026 ↗</span></div>
+    </article>
+        <article class="card reveal" data-category="elite" data-name="red">
+      <div class="card-top"><span>INDUCTEE NO. 009</span><span class="rank">ELITE</span></div>
+      <div class="avatar-wrap"><img class="avatar" src="https://file.garden/arIVMF8UTouAgBFb/857955797_2080088352624060_6842386953203296536_n.jpg" alt="Red profile picture" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="avatar-placeholder" style="display:none">M9</div></div>
+      <h3>Red</h3><div class="role">Loyalty / Dedication</div>
+      <div class="card-bottom"><span>HALL OF FAME</span><span>2026 ↗</span></div>
+    </article>
+        <article class="card reveal" data-category="elite" data-name="niku">
+      <div class="card-top"><span>INDUCTEE NO. 010</span><span class="rank">ELITE</span></div>
+      <div class="avatar-wrap"><img class="avatar" src="https://file.garden/arIVMF8UTouAgBFb/af457d04ac4221a72168fbfa09863ac5.jpg" alt="Niku profile picture" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="avatar-placeholder" style="display:none">M10</div></div>
+      <h3>Niku</h3><div class="role">Spammer / Icon</div>
+      <div class="card-bottom"><span>HALL OF FAME</span><span>2026 ↗</span></div>
+    </article>
+        <article class="card reveal" data-category="elite" data-name="lo">
+      <div class="card-top"><span>INDUCTEE NO. 011</span><span class="rank">ELITE</span></div>
+      <div class="avatar-wrap"><img class="avatar" src="https://file.garden/arIVMF8UTouAgBFb/055d4d9f-e490-4681-9622-e7001395c2e1.jfif" alt="Niku profile picture" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="avatar-placeholder" style="display:none">M11</div></div>
+      <h3>lo</h3><div class="role">Lover Boy / Semi Known</div>
+      <div class="card-bottom"><span>HALL OF FAME</span><span>2026 ↗</span></div>
+    </article>
+    <div class="empty" id="empty">NO MATCHES FOUND IN THE ARCHIVE.</div>
+  </div>
+</section>
+<section class="section" id="legacy" style="padding-top:0">
+  <div class="eyebrow reveal">02 / The centerpiece</div>
+  <div class="featured reveal">
+    <div class="featured-visual"><div class="featured-tag">THE STANDARD / 001</div><div class="featured-symbol">∞</div></div>
+    <div class="featured-info"><div class="eyebrow">Beyond recognition</div><h3>Legacy never fades.</h3><p>Some people leave a mark. Others become the standard. This archive exists to honor the ones whose impact will always be remembered.</p><div class="meta"><span>RESPECT</span><span>LOYALTY</span><span>LEGACY</span></div></div>
+  </div>
+</section>
+<section class="quote">
+  <div class="quote-mark">“</div>
+  <p>Greatness isn't given a place in history. It earns one.</p>
+  <small>THE HALL OF FAME MANIFESTO — MMXXVI</small>
+</section>
+</main>
+<footer class="footer"><span>© 2025 <strong>THE ARCHIVE.</strong> ALL RIGHTS RESERVED.</span><span>BUILT FOR THE ONES WHO LEFT A LEGACY.</span><a href="#top">BACK TO TOP ↑</a></footer>
+<script>
+
+// HOF intro image. Set this path to a file beside your HTML.
+const INTRO_IMAGE = 'https://file.garden/arIVMF8UTouAgBFb/9fbdd1fc3e7a8ad21ead28b0626f4cce.jpg';
+
+const intro = document.getElementById('hof-intro');
+const introImage = document.getElementById('hof-intro-image');
+
+introImage.src = INTRO_IMAGE;
+
+let introFinished = false;
+
+function finishIntro() {
+  if (introFinished) return;
+  introFinished = true;
+  intro.classList.add('is-fading');
+  window.setTimeout(() => intro.remove(), 1000);
+}
+
+// Ensure intro always ends, even if its image fails to load.
+if (introImage.complete && introImage.naturalWidth > 0) {
+  window.setTimeout(finishIntro, 1700);
+} else {
+  introImage.addEventListener('load', () => window.setTimeout(finishIntro, 1700), { once: true });
+  introImage.addEventListener('error', () => window.setTimeout(finishIntro, 900), { once: true });
+  window.setTimeout(finishIntro, 5000);
+}
+
+// Build a truly continuous marquee: repeat the text enough times to cover
+// the entire viewport plus the moving section, then translate by one group.
+const marquee = document.querySelector('.marquee');
+const marqueeTrack = document.querySelector('.marquee-track');
+if (marquee && marqueeTrack) {
+  const originalGroup = marqueeTrack.querySelector('.marquee-group');
+  if (originalGroup) {
+    const setupMarquee = () => {
+      marqueeTrack.querySelectorAll('.marquee-group:not(:first-child)').forEach(group => group.remove());
+      const groupWidth = originalGroup.getBoundingClientRect().width;
+      if (!groupWidth) return;
+      const copiesNeeded = Math.ceil(marquee.clientWidth / groupWidth) + 2;
+      for (let i = 0; i < copiesNeeded; i++) {
+        marqueeTrack.appendChild(originalGroup.cloneNode(true));
+      }
+      marqueeTrack.style.setProperty('--marquee-distance', `${groupWidth}px`);
+      // Keep roughly the same readable speed on wide and narrow screens.
+      marqueeTrack.style.setProperty('--marquee-duration', `${Math.max(12, groupWidth / 35)}s`);
+    };
+    setupMarquee();
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(setupMarquee, 120);
+    });
+  }
+}
+
+const filters = [...document.querySelectorAll('.filter')];
+const cards = [...document.querySelectorAll('.card[data-category]')];
+const search = document.getElementById('search');
+const empty = document.getElementById('empty');
+let currentFilter = 'all';
+function updateCards(){
+  const term = search.value.trim().toLowerCase();
+  let visible = 0;
+  cards.forEach(card => {
+    const matchesFilter = currentFilter === 'all' || card.dataset.category === currentFilter;
+    const matchesSearch = (card.dataset.name + ' ' + card.innerText).toLowerCase().includes(term);
+    const show = matchesFilter && matchesSearch;
+    card.style.display = show ? '' : 'none';
+    if(show) visible++;
+  });
+  empty.style.display = visible ? 'none' : 'block';
+}
+filters.forEach(button => button.addEventListener('click', () => {
+  currentFilter = button.dataset.filter;
+  filters.forEach(item => item.classList.toggle('active', item === button));
+  updateCards();
+}));
+search.addEventListener('input', updateCards);
+const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+  if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}
+}), {threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
